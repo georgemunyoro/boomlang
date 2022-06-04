@@ -1,15 +1,23 @@
 import sys
 from evaluator import NodeEvaluator
 from boom_parser import BinaryNode, Parser, UnaryNode
-import math
-from pprint import pprint
+from interpreter import Interpreter
 
 
-with open(sys.argv[1], "r") as f:
-    source = f.read()
-    gs = dict({"global": {}})
+def run_file(filepath: str):
+    with open(filepath, "r") as f:
+        source = f.read()
+        gs = dict({"global": {}})
 
-    for i in Parser(source).parse():
-        ev = NodeEvaluator(i, gs)
-        ev.evaluate(i)
-        gs = ev.scope
+        for i in Parser(source).parse():
+            ev = NodeEvaluator(i, gs)
+            ev.evaluate(i)
+            gs = ev.scope
+
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        run_file(sys.argv[1])
+    else:
+        terp = Interpreter()
+        terp.loop()
