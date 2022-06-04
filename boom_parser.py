@@ -1,7 +1,7 @@
 import enum
 from os import uname
 from typing import Any, List
-from lexer import BASE_TOKEN_IDS, lex, Token
+from lexer import BASE_TOKEN_IDS, Lexer, Token
 
 
 class Node:
@@ -35,15 +35,16 @@ class Parser:
     def __init__(self, source):
         self.source = source
         self.pos = 0
-
-        self.tokens = lex(source)
-
+        self.lexer = Lexer(source)
+        self.tokens = self.lexer.lex()
         self.running = False
 
     def parse(self) -> List[Node]:
         for i, token in enumerate(self.tokens):
             if token.value in BASE_TOKEN_IDS.keys():
-                self.tokens[i] = Token(BASE_TOKEN_IDS[token.value], token.value)
+                self.tokens[i] = Token(
+                    BASE_TOKEN_IDS[token.value], token.value
+                )
 
         self.running = True
         while self.running:
@@ -51,7 +52,7 @@ class Parser:
 
     @property
     def curr_token(self) -> Token:
-        if self.pos < len(self.tokens) - 1:
+        if self.pos < len(self.tokens):
             return self.tokens[self.pos]
         self.running = False
         return Token("END", "END")
@@ -85,7 +86,9 @@ class Parser:
         if self.curr_token.id == "ITEM":
             if self.next_token.id == "OPEN_PAREN":
                 n = BinaryNode(
-                    UnaryNode(self.curr_token.value, "ITEM"), Node("", ""), "FUNC"
+                    UnaryNode(self.curr_token.value, "ITEM"),
+                    Node("", ""),
+                    "FUNC",
                 )
                 self.pos += 2
                 n.right = self.parse_func_args()
@@ -118,7 +121,10 @@ class Parser:
             self.pos += 1
             return expr
 
-        elif self.curr_token.id == "NUMBER_LIT" or self.curr_token.id == "STRING_LIT":
+        elif (
+            self.curr_token.id == "NUMBER_LIT"
+            or self.curr_token.id == "STRING_LIT"
+        ):
             if self.next_token.id.startswith("OPER_"):
                 n = BinaryNode(
                     UnaryNode(self.curr_token.value, self.curr_token.id),

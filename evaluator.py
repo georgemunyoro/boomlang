@@ -6,7 +6,6 @@ from turtle import right
 from typing import Dict
 from uuid import uuid4
 
-from lexer import lex
 from boom_parser import BinaryNode, Parser, UnaryNode
 
 
