@@ -115,7 +115,10 @@ class Parser:
                 self.pos += 1
                 return UnaryNode(self.prev_token.value, "ITEM")
 
-        elif self.curr_token.id == "OPEN_PAREN":
+        elif (
+            self.curr_token.id == "OPEN_PAREN"
+            or self.curr_token.id == "OPEN_BRACE"
+        ):
             self.pos += 1
             expr = self.parse_expr()
             self.pos += 1

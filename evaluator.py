@@ -174,10 +174,7 @@ class NodeEvaluator:
             return self.evaluate(node.left) and self.evaluate(node.right)
 
     def evaluate_function_node(self, node: BinaryNode):
-        if node.left.value == "func":
-            return "NOT_IMPLEMENTED"
-
-        elif node.left.value == "return":
+        if node.left.value == "return":
             params = [self.evaluate(p) for p in node.right.value]
             return params[0]
 
@@ -190,7 +187,7 @@ class NodeEvaluator:
         elif node.left.value == "for":
             return self.evaluate_for_loop_node(node)
 
-        elif node.left.value == "_":
+        elif node.left.value == "func":
             return self.evaluate_block_node(node)
 
         elif node.left.value == "if":

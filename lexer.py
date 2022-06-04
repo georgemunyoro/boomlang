@@ -5,6 +5,8 @@ BASE_TOKEN_IDS = {
     ",": "SYMB_COMMA",
     "(": "OPEN_PAREN",
     ")": "CLOS_PAREN",
+    "{": "OPEN_BRACE",
+    "}": "CLOS_BRACE",
     ";": "CLOS_EXPRN",
     "=": "OPER_EQUAL",
     "+": "OPER_ADDTN",
@@ -49,8 +51,8 @@ class Lexer:
         for i in self.source:
             self.buffer += i
             if self.in_string:
-                if self.handle_string_char(i) is False:
-                    continue
+                self.handle_string_char(i)
+                continue
 
             if self.in_number:
                 if self.handle_digit_char(i) is False:
