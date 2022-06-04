@@ -9,7 +9,6 @@ class Interpreter:
     def loop(self):
         while True:
             source = input(": ")
-            print(source)
 
             if source == "exit":
                 return

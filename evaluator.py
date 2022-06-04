@@ -130,6 +130,9 @@ class NodeEvaluator:
                     return self.scope[scope_key][node.value]
 
     def evaluate_binary_node(self, node: BinaryNode):
+        if node is None:
+            return
+
         if node.value == "FUNC":
             return self.evaluate_function_node(node)
 
