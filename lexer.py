@@ -44,9 +44,22 @@ class Lexer:
         self.tokens = []
         self.buffer = ""
 
+    def strip_comments(self):
+        self.source = "\n".join(
+            [
+                line
+                for line in self.source.split("\n")
+                if not line.strip().startswith("#")
+            ]
+        )
+
     def lex(self) -> List[str]:
+        self.strip_comments()
+
         DOUBLE_QUOTE = '"'
         SINGLE_QUOTE = "'"
+
+        self.strip_comments()
 
         for i in self.source:
             self.buffer += i
