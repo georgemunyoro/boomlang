@@ -91,4 +91,6 @@ def lex(code: str) -> List[str]:
             buffer = ""
             continue
 
-    return [token for token in tokens if token.value != "" and token.value != "\n"]
+    return [
+        token for token in tokens if token.value != "" and token.value != "\n"
+    ]
