@@ -126,7 +126,17 @@ class NodeEvaluator:
                 depth = len(self.scope_stack) - i
                 scope_key = "".join(self.scope_stack[:depth]).strip()
                 scope_exists = scope_key in self.scope.keys()
-                if scope_exists and node.value in self.scope[scope_key].keys():
+                if (
+                    scope_exists
+                    and node.value.split(".")[0]
+                    in self.scope[scope_key].keys()
+                ):
+                    if "." in node.value:
+                        val = self.scope[scope_key][node.value.split(".")[0]]
+                        for index, j in enumerate(node.value.split(".")):
+                            if index > 0:
+                                val = val[j]
+                        return val
                     return self.scope[scope_key][node.value]
 
     def evaluate_binary_node(self, node: BinaryNode):
@@ -199,7 +209,7 @@ class NodeEvaluator:
     def evaluate_map_node(self, node: BinaryNode):
         temp_dict = dict()
         for i in node.right.value:
-            temp_dict[str(i.left.value)] = self.evaluate(i.right)
+            temp_dict[str(i.left.value).strip()] = self.evaluate(i.right)
         return temp_dict
 
     def evaluate_include_node(self, node: BinaryNode):
