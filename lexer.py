@@ -47,7 +47,7 @@ class Lexer:
     def strip_comments(self):
         self.source = "\n".join(
             [
-                line
+                line.strip()
                 for line in self.source.split("\n")
                 if not line.strip().startswith("#")
             ]
