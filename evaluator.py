@@ -188,6 +188,12 @@ class NodeEvaluator:
             params = [self.evaluate(p) for p in node.right.value]
             return params[0]
 
+        elif (
+            node.left.value == "__python__::__evaluate__"
+            and self.scope["global"]["__boomlang__::__enable_python_eval__"]
+        ):
+            return eval(node.right.value[0].value)
+
         elif node.left.value == "map":
             return self.evaluate_map_node(node)
 
@@ -263,6 +269,15 @@ class NodeEvaluator:
             for p in node.right.value
             if p is not None and p.value != "OPER_EQUAL"
         ]
-        res = self.evaluate(node.left)(self, *params)
+        try:
+            res = self.evaluate(node.left)(self, *params)
+        except Exception:
+            pass
+
+        try:
+            res = self.evaluate(node.left)(*params)
+        except Exception:
+            pass
+
         self.scope_stack.pop()
         return res
